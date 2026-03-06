@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connecting...</title>
+<style>
+body{
+  background:black;
+  color:#00ff00;
+  font-family:monospace;
+  padding:20px;
+}
+
+#progress{
+  width:100%;
+  background:#111;
+  margin-top:20px;
+}
+
+#bar{
+  width:0%;
+  height:20px;
+  background:#00ff00;
+}
+
+.box{
+  margin-top:20px;
+  line-height:1.8;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Initializing Secure Data Transfer...</h2>
+
+<div class="box" id="info"></div>
+
+<div id="progress">
+  <div id="bar"></div>
+</div>
+
+<h3 id="status">Collecting Device Data...</h3>
+
+<script>
+
+let progress = 0;
+let bar = document.getElementById("bar");
+let status = document.getElementById("status");
+
+let fakeIP = "192." + Math.floor(Math.random()*255) + "." + Math.floor(Math.random()*255) + "." + Math.floor(Math.random()*255);
+
+let device = navigator.userAgent;
+
+function getDevice(){
+  if(device.includes("Android")) return "Android Device";
+  if(device.includes("iPhone")) return "iPhone";
+  if(device.includes("Windows")) return "Windows PC";
+  return "Unknown Device";
+}
+
+let browser = navigator.userAgent.includes("Chrome") ? "Chrome" :
+              navigator.userAgent.includes("Firefox") ? "Firefox" :
+              navigator.userAgent.includes("Safari") ? "Safari" :
+              "Unknown Browser";
+
+function updateInfo(batteryLevel="Detecting..."){
+  document.getElementById("info").innerHTML =
+  "IP Address: " + fakeIP + "<br>" +
+  "Location: Uttar Pradesh, India<br>" +
+  "Device: " + getDevice() + "<br>" +
+  "Browser: " + browser + "<br>" +
+  "Battery: " + batteryLevel + "<br>";
+}
+
+updateInfo();
+
+if(navigator.getBattery){
+  navigator.getBattery().then(function(battery){
+    let level = Math.round(battery.level * 100) + "%";
+    updateInfo(level);
+  });
+}
+
+let interval = setInterval(function(){
+  progress += 5;
+  bar.style.width = progress + "%";
+
+  if(progress == 40){
+    status.innerText = "Encrypting Device Files...";
+  }
+
+  if(progress == 70){
+    status.innerText = "Uploading Data to Server...";
+  }
+
+  if(progress >= 100){
+    clearInterval(interval);
+    status.innerText = "Device Data Successfully Transferred to Server. Thank You.";
+  }
+
+}, 300);
+
+</script>
+
+</body>
+</html>
